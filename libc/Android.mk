@@ -370,7 +370,6 @@ libc_common_src_files += \
 	string/strncpy.c \
 	bionic/strchr.cpp \
 	string/strrchr.c \
-	bionic/memchr.c \
 	bionic/memrchr.c \
 	string/index.c \
 	string/strlcpy.c \
@@ -381,6 +380,11 @@ libc_common_src_files += \
 	upstream-freebsd/lib/libc/string/wmemcmp.c \
 	upstream-freebsd/lib/libc/string/wcslen.c \
 	upstream-freebsd/lib/libc/string/wcscat.c
+
+ifneq ($(TARGET_CPU_VARIANT),tegra2)
+libc_common_src_files += \
+	bionic/memchr.c
+endif
 
 # These files need to be arm so that gdbserver
 # can set breakpoints in them without messing
