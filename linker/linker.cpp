@@ -2250,7 +2250,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
              * R_ARM_COPY may only appear in executable objects where e_type is
              * set to ET_EXEC.
              */
-            DL_ERR("%s R_ARM_COPY relocations are not supported", name);
+            DL_ERR("%s R_ARM_COPY relocations are not supported", get_realpath());
             return -1;
 #else
             if ((flags & FLAG_EXE) == 0) {
@@ -2265,7 +2265,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                 * We should explicitly disallow ET_DYN executables from having
                 * R_ARM_COPY relocations.
                 */
-                DL_ERR("%s R_ARM_COPY relocations only supported for ET_EXEC", name);
+                DL_ERR("%s R_ARM_COPY relocations only supported for ET_EXEC", si->get_soname());
                 return -1;
             }
             count_relocation(kRelocCopy);
@@ -2275,12 +2275,12 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                 ElfW(Sym)* src = soinfo_do_lookup(NULL, sym_name, &lsi, needed);
 
                 if (src == NULL) {
-                    DL_ERR("%s R_ARM_COPY relocation source cannot be resolved", name);
+                    DL_ERR("%s R_ARM_COPY relocation source cannot be resolved", si->get_soname());
                     return -1;
                 }
                 if (lsi->has_DT_SYMBOLIC) {
                     DL_ERR("%s invalid R_ARM_COPY relocation against DT_SYMBOLIC shared "
-                           "library %s (built with -Bsymbolic?)", name, lsi->name);
+                           "library %s (built with -Bsymbolic?)", si->get_soname(), lsi->name);
                     return -1;
                 }
                 if (s->st_size < src->st_size) {
@@ -2291,7 +2291,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                 memcpy(reinterpret_cast<void*>(reloc),
                        reinterpret_cast<void*>(src->st_value + lsi->load_bias), src->st_size);
             } else {
-                DL_ERR("%s R_ARM_COPY relocation target cannot be resolved", name);
+                DL_ERR("%s R_ARM_COPY relocation target cannot be resolved", si->get_soname());
                 return -1;
             }
             break;
