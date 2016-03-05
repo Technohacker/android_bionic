@@ -34,6 +34,7 @@ LOCAL_CFLAGS += \
     -Wstrict-overflow=5 \
     -fvisibility=hidden \
     -Wall -Wextra -Wunused -Werror \
+    -Wno-error=old-style-cast -Wno-error=unused-but-set-variable \
 
 LOCAL_CFLAGS_arm += -D__work_around_b_19059885__
 LOCAL_CFLAGS_x86 += -D__work_around_b_19059885__
